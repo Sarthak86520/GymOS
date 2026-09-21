@@ -27,25 +27,21 @@ const generateAccessAndRefereshTokens = async(userId) =>{
 
 const registerUser = asyncHandler( async (req, res) => {
 
-    const {fullName, email, username, password,mobile } = req.body
+    const {email, username, password} = req.body
 
     if (
-        [fullName, email, username, password,mobile].some((field) => field?.trim() === "")
+        [ email, username, password].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
-    if (!mobile.length === 10){
-        throw new ApiError(400, "mobile should be 10 numbers")
-    }
 
     const existedUser = await User.findOne({
-        $or: [{ username }, { email }]
+        $or: [{ email }]
     })
 
     if (existedUser) {
-        throw new ApiError(409, "User with email or username already exists")
+        throw new ApiError(409, "User with email already exists")
     }
-    console.log('yha tk thik h')
 
     let avatarLocalPath;
     if (req.files && Array.isArray(req.files.avatar) && req.files.avatar.length > 0) {
@@ -63,9 +59,7 @@ const registerUser = asyncHandler( async (req, res) => {
    
 
     const user = await User.create({
-        fullName,
         avatar: avatar.url || "",
-        mobile,
         email, 
         password,
         username: username.toLowerCase()
@@ -87,17 +81,17 @@ const registerUser = asyncHandler( async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) =>{
 
-    const {email, username, password} = req.body
+    const {email, password} = req.body
 
 
-    if (!username && !email) {
-        throw new ApiError(400, "username or email is required")
+    if (!email) {
+        throw new ApiError(400, "email is required")
     }
     
 
 
     const user = await User.findOne({
-        $or: [{username}, {email}]
+        email
     })
 
     if (!user) {
@@ -240,9 +234,9 @@ const getCurrentUser = asyncHandler(async(req, res) => {
 })
 
 const updateAccountDetails = asyncHandler(async(req, res) => {
-    const {fullName, email, mobile} = req.body
+    const { email,username} = req.body
 
-    if (!fullName || !email || !mobile) {
+    if (!username || !email ) {
         throw new ApiError(400, "All fields are required")
     }
 
@@ -250,9 +244,8 @@ const updateAccountDetails = asyncHandler(async(req, res) => {
         req.user?._id,
         {
             $set: {
-                fullName,
+                username,
                 email: email,
-                mobile
             }
         },
         {returnDocument: "after"}

@@ -7,10 +7,8 @@ const userSchema = new mongoose.Schema(
   username: {
             type: String,
             required: true,
-            unique: true,
             lowercase: true,
             trim: true, 
-            index: true
         },
         email: {
             type: String,
@@ -18,20 +16,11 @@ const userSchema = new mongoose.Schema(
             unique: true,
             lowecase: true,
             trim: true, 
-        },
-        fullName: {
-            type: String,
-            required: true,
-            trim: true, 
             index: true
         },
         avatar: {
             type: String, // cloudinary url
             // default: // add default avatar
-        },
-        mobile:{
-          type:String,
-          required:true,
         },
         role: {
            type: String,
@@ -66,7 +55,6 @@ userSchema.methods.generateAccessToken = function(){
             _id: this._id,
             email: this.email,
             username: this.username,
-            fullName: this.fullName
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
