@@ -5,6 +5,7 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose"
+import { Member } from "../models/member.model.js";
 
 
 
@@ -64,7 +65,9 @@ const registerUser = asyncHandler( async (req, res) => {
         password,
         username: username.toLowerCase()
     })
-
+    const member = await Member.create({
+    user: user._id
+});
     const createdUser = await User.findById(user._id).select(
         "-password -refreshToken"
     )
