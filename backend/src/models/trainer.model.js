@@ -24,6 +24,4 @@ const trainerSchema = new mongoose.Schema(
     }
 );
 
-const Trainer = mongoose.model('Trainer', trainerSchema);
-
-export default Trainer;
+export const Trainer = mongoose.model('Trainer', trainerSchema);
