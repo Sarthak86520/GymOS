@@ -1,23 +1,30 @@
 import mongoose from 'mongoose';
 
-const memebershipplanSchema = mongoose.Schema(
+const membershipPlanSchema = new mongoose.Schema(
     {
-  name: String,
+        name: String,
 
-  duration: Number, // months
+        duration: Number, // months
 
-  price: Number,
+        price: Number,
 
-  description: String,
+        description: String,
 
-  features: [String],
+        features: [String],
 
-  isActive: {
-    type: Boolean,
-    default: true
-  }
-},{timestamps:true}
-)
+        isActive: {
+            type: Boolean,
+            default: true
+        }
+    },
+    {
+        timestamps: true
+    }
+);
 
-const Membershipplan = mongoose.model('Membershipplan',memebershipplanSchema)
-export default Membershipplan
+const MembershipPlan = mongoose.model(
+    "MembershipPlan",
+    membershipPlanSchema
+);
+
+export default MembershipPlan;
