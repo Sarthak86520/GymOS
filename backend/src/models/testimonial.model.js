@@ -1,22 +1,37 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const testimonialSchema = mongoose.Schema(
     {
-  name: String,
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+            unique: true
+        },
 
-  image: String,
+        image: {
+            type: String,
+            default: ""
+        },
 
-  message: String,
+        message: {
+            type: String,
+            required: true
+        },
 
-  rating: Number,
+        rating: {
+            type: Number,
+            required: true,
+            min: 1,
+            max: 5
+        }
+    },
+    { timestamps: true }
+);
 
-  isApproved: {
-    type: Boolean,
-    default: false
-  }
-},{timestamps:true}
-)
+const Testimonial = mongoose.model(
+    "Testimonial",
+    testimonialSchema
+);
 
-const Testimonial = mongoose.model('Testimonial',testimonialSchema)
-
-export default Testimonial
+export default Testimonial;

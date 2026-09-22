@@ -1,20 +1,33 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-const machineSchema = mongoose.Schema(
+const machineSchema = new mongoose.Schema(
     {
-  name: String,
+        name: String,
 
-  description: String,
+        description: String,
 
-  muscleGroup: [String],
+        muscleGroup: [String],
 
-  image: String,
+        image: String,
 
-  quantity: Number,
+        quantity: {
+            type: Number,
+            default: 1
+        },
 
-  isAvailable: Boolean
-},{timestamps:true}
-)
+        isAvailable: {
+            type: Boolean,
+            default: true
+        }
+    },
+    {
+        timestamps: true
+    }
+);
 
-const Machine = mongoose.model('Machine',machineSchema)
-export default Machine
+const Machine = mongoose.model(
+    "Machine",
+    machineSchema
+);
+
+export default Machine;

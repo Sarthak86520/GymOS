@@ -59,6 +59,152 @@ const createMembershipPlan = asyncHandler(async (req, res) => {
         );
 });
 
+const getAllMembershipPlans = asyncHandler(async (req, res) => {
+
+    const plans = await MembershipPlan.find({
+        isActive: true
+    });
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                plans,
+                "Membership plans fetched successfully"
+            )
+        );
+});
+
+const getMembershipPlanById = asyncHandler(async (req, res) => {
+
+    const { planId } = req.params;
+
+    const plan = await MembershipPlan.findById(planId);
+
+    if (!plan) {
+        throw new ApiError(
+            404,
+            "Membership plan not found"
+        );
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                plan,
+                "Membership plan fetched successfully"
+            )
+        );
+});
+
+const updateMembershipPlan = asyncHandler(async (req, res) => {
+
+    if (req.user?.role !== "admin") {
+        throw new ApiError(
+            403,
+            "Only admin can update membership plans"
+        );
+    }
+
+    const { planId } = req.params;
+
+    const {
+        name,
+        duration,
+        price,
+        description,
+        features,
+        isActive
+    } = req.body;
+
+    const plan = await MembershipPlan.findById(planId);
+
+    if (!plan) {
+        throw new ApiError(
+            404,
+            "Membership plan not found"
+        );
+    }
+
+    const updatedPlan = await MembershipPlan.findByIdAndUpdate(
+        planId,
+        {
+            $set: {
+                name,
+                duration,
+                price,
+                description,
+                features,
+                isActive
+            }
+        },
+        {
+            new: true,
+            runValidators: true
+        }
+    );
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                updatedPlan,
+                "Membership plan updated successfully"
+            )
+        );
+});
+
+const deleteMembershipPlan = asyncHandler(async (req, res) => {
+
+    if (req.user?.role !== "admin") {
+        throw new ApiError(
+            403,
+            "Only admin can delete membership plans"
+        );
+    }
+
+    const { planId } = req.params;
+
+    const plan = await MembershipPlan.findById(planId);
+
+    if (!plan) {
+        throw new ApiError(
+            404,
+            "Membership plan not found"
+        );
+    }
+
+    const deletedPlan = await MembershipPlan.findByIdAndUpdate(
+        planId,
+        {
+            $set: {
+                isActive: false
+            }
+        },
+        {
+            returnDocument: 'after'
+        }
+    );
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                deletedPlan,
+                "Membership plan deactivated successfully"
+            )
+        );
+});
+
 export {
-    createMembershipPlan
+    createMembershipPlan,
+    getAllMembershipPlans,
+    getMembershipPlanById,
+    updateMembershipPlan,
+    deleteMembershipPlan
 };

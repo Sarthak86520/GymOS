@@ -1,35 +1,45 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-const paymentSchema = mongoose.Schema(
+const paymentSchema = new mongoose.Schema(
     {
-  member: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Member"
-  },
+        member: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Member",
+            required: true
+        },
 
-  membership: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Membership"
-  },
+        membership: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Membership",
+            default: null
+        },
 
-  amount: Number,
+        amount: {
+            type: Number,
+            required: true
+        },
 
-  status: {
-    type: String,
-    enum: ["pending", "success", "failed"]
-  },
+        status: {
+            type: String,
+            enum: ["pending", "success", "failed"],
+            default: "pending"
+        },
 
-  razorpayOrderId: String,
+        razorpayOrderId: {
+            type: String,
+            required: true
+        },
 
-  razorpayPaymentId: String,
+        razorpayPaymentId: {
+            type: String,
+            default: null
+        }
+    },
+    {
+        timestamps: true
+    }
+);
 
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-},{timestamps:true}
-)
+const Payment = mongoose.model("Payment", paymentSchema);
 
-const Payment = mongoose.model('Payment',paymentSchema)
-
-export default Payment
+export default Payment;
