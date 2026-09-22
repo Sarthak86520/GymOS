@@ -22,6 +22,7 @@ import trainerRouter from './routes/trainer.route.js'
 import adminRouter from './routes/admin.route.js'
 import membershipPlanRouter from './routes/membershipPlan.route.js' 
 import machineRouter from "./routes/machine.route.js";
+import testimonialRouter from "./routes/testimonial.route.js"
 
 
 //routes declaration
@@ -37,6 +38,11 @@ app.use(
     "/api/v1/machines",
     machineRouter
 );
+app.use(
+    "/api/v1/testimonials",
+    testimonialRouter
+);
+
 
 
 export { app };
