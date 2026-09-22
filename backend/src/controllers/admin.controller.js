@@ -69,6 +69,140 @@ const promoteMemberToTrainer = asyncHandler(async (req, res) => {
         );
 });
 
+const assignMemberToTrainer = asyncHandler(async (req, res) => {
+
+    // Check admin
+    if (req.user?.role !== "admin") {
+        throw new ApiError(
+            403,
+            "Only admin can assign members to trainers"
+        );
+    }
+
+    const { memberId, trainerId } = req.params;
+
+    // Check member
+    const member = await Member.findById(memberId);
+
+    if (!member) {
+        throw new ApiError(
+            404,
+            "Member not found"
+        );
+    }
+
+    // Check trainer
+    const trainer = await Trainer.findById(trainerId);
+
+    if (!trainer) {
+        throw new ApiError(
+            404,
+            "Trainer not found"
+        );
+    }
+
+    // Assign trainer
+    const updatedMember = await Member.findByIdAndUpdate(
+        memberId,
+        {
+            $set: {
+                trainer: trainerId
+            }
+        },
+        {
+            new: true,
+            runValidators: true
+        }
+    )
+        .populate(
+            "user",
+            "-password -refreshToken"
+        )
+        .populate("trainer");
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                updatedMember,
+                "Member assigned to trainer successfully"
+            )
+        );
+}
+)
+const removeMemberFromTrainer = asyncHandler(async (req, res) => {
+
+    // Check admin
+    if (req.user?.role !== "admin") {
+        throw new ApiError(
+            403,
+            "Only admin can remove a member from a trainer"
+        );
+    }
+
+    const { memberId, trainerId } = req.params;
+
+    // Check member
+    const member = await Member.findById(memberId);
+
+    if (!member) {
+        throw new ApiError(
+            404,
+            "Member not found"
+        );
+    }
+
+    // Check trainer
+    const trainer = await Trainer.findById(trainerId);
+
+    if (!trainer) {
+        throw new ApiError(
+            404,
+            "Trainer not found"
+        );
+    }
+
+    // Check whether member is assigned to this trainer
+    if (!member.trainer || member.trainer.toString() !== trainerId) {
+        throw new ApiError(
+            400,
+            "This member is not assigned to this trainer"
+        );
+    }
+
+    // Remove trainer
+    const updatedMember = await Member.findByIdAndUpdate(
+        memberId,
+        {
+            $set: {
+                trainer: null
+            }
+        },
+        {
+            new: true,
+            runValidators: true
+        }
+    )
+        .populate(
+            "user",
+            "-password -refreshToken"
+        )
+        .populate("trainer");
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                updatedMember,
+                "Member removed from trainer successfully"
+            )
+        );
+});
+
 export {
-    promoteMemberToTrainer
+    promoteMemberToTrainer,
+    assignMemberToTrainer,
+    removeMemberFromTrainer
 };
