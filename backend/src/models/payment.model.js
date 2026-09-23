@@ -1,10 +1,16 @@
 import mongoose from "mongoose";
 
-const paymentSchema = new mongoose.Schema(
+const paymentSchema = mongoose.Schema(
     {
         member: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Member",
+            required: true
+        },
+
+        plan: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "MembershipPlan",
             required: true
         },
 
@@ -40,6 +46,8 @@ const paymentSchema = new mongoose.Schema(
     }
 );
 
-const Payment = mongoose.model("Payment", paymentSchema);
+export const Payment = mongoose.model(
+    "Payment",
+    paymentSchema
+);
 
-export default Payment;

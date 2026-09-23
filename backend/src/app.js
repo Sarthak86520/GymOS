@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser"
 const app = express()
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: 'http://localhost:5173',
     credentials: true
 }))
 
@@ -24,6 +24,8 @@ import membershipPlanRouter from './routes/membershipPlan.route.js'
 import machineRouter from "./routes/machine.route.js";
 import testimonialRouter from "./routes/testimonial.route.js"
 import galleryRouter from "./routes/gallery.route.js"
+import paymentRouter from "./routes/payment.route.js"
+import  membershipRouter from "./routes/membership.route.js";
 
 
 //routes declaration
@@ -46,6 +48,14 @@ app.use(
 app.use(
     "/api/v1/gallery",
     galleryRouter
+)
+app.use(
+    "/api/v1/payments",
+    paymentRouter
+)
+app.use(
+    "/api/v1/memberships",
+    membershipRouter
 )
 
 

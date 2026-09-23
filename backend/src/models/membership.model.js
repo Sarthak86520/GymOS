@@ -18,6 +18,5 @@ const membershipSchema = mongoose.Schema(
 },{timestamps:true}
 )
 
-const Membership = mongoose.model('Membership',membershipSchema)
+export const Membership = mongoose.model('Membership',membershipSchema)
 
-export default Membership
