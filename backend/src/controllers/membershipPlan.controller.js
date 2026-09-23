@@ -2,7 +2,7 @@ import {asyncHandler} from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js";
 import {ApiResponse} from "../utils/ApiResponse.js";
 
-import MembershipPlan from "../models/membershipPlan.model.js";
+import {MembershipPlan} from "../models/membershipplan.model.js";
 
 const createMembershipPlan = asyncHandler(async (req, res) => {
 
